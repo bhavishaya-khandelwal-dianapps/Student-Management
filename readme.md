@@ -4,6 +4,19 @@ student-management/
 │   └── server/
 │       └── main.go
 │
+├── configs/                  <-- YAML / JSON config files
+│   ├── app.yaml
+│   ├── db.yaml
+│   └── logger.yaml
+│
+├── deployments/              <-- Kubernetes YAMLs
+│   ├── deployment.yaml
+│   ├── service.yaml
+│   └── ingress.yaml
+│
+├── api/                      <-- Swagger / OpenAPI YAML
+│   └── openapi.yaml
+│
 ├── internal/
 │   ├── handlers/        # controllers
 │   │   └── student_handler.go
@@ -28,6 +41,8 @@ student-management/
 │   │
 │   └── database/        # DB connection
 │       └── db.go
+│
+├── pkg/                      <-- optional reusable code
 │
 ├── go.mod
 └── go.sum

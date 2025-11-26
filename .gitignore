@@ -35,4 +35,4 @@ go.work.sum
 storage
 
 # config folder 
-/config
+configs
