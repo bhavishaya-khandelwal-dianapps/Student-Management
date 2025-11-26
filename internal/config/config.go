@@ -9,7 +9,7 @@ import (
 )
 
 type HTTPServer struct {
-	Addr string
+	Addr string `yaml:"address" env-required:"true"`
 }
 
 // env-default:"production"
@@ -35,7 +35,6 @@ func MustLoad() *Config {
 			log.Fatal("Config path is not set")
 		}
 	}
-
 
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
 		log.Fatalf("Config file does not exist: %s", configPath)
