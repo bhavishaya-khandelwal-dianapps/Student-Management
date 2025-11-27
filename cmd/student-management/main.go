@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/bhavishaya-khandelwal-dianapps/Student-Management/internal/config"
+	student "github.com/bhavishaya-khandelwal-dianapps/Student-Management/internal/handlers/students"
 )
 
 func main() {
@@ -22,9 +23,11 @@ func main() {
 	// Setup router
 	router := http.NewServeMux()
 
-	router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello World"))
-	})
+	// router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
+	// 	w.Write([]byte("Hello World"))
+	// })
+
+	router.HandleFunc("POST /api/student", student.New())
 
 	// Setup server
 	server := http.Server{
