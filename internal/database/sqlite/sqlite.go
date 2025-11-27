@@ -2,8 +2,10 @@ package sqlite
 
 import (
 	"database/sql"
+	"fmt"
 
 	"github.com/bhavishaya-khandelwal-dianapps/Student-Management/internal/config"
+	"github.com/bhavishaya-khandelwal-dianapps/Student-Management/internal/models"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -61,4 +63,31 @@ func (s *Sqlite) CreateStudent(name string, email string, age int) (int64, error
 	}
 
 	return lastId, nil
+}
+
+func (s *Sqlite) GetStudentById(id int64) (models.Student, error) {
+
+	// Step 1 : Prepare query
+	statement, err := s.Db.Prepare("SELECT * FROM students WHERE id = ? LIMIT 1")
+
+	if err != nil {
+		return models.Student{}, err
+	}
+
+	// Make sure to close the satement
+	defer statement.Close()
+
+	var student models.Student
+
+	err = statement.QueryRow(id).Scan(&student.Id, &student.Name, &student.Email, &student.Age)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return models.Student{}, fmt.Errorf("no student found with id %s", fmt.Sprint(id))
+		}
+
+		return models.Student{}, fmt.Errorf("query error: %w", err)
+	}
+
+	return student, nil
 }
