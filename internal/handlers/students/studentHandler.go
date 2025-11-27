@@ -15,7 +15,7 @@ import (
 	"github.com/go-playground/validator"
 )
 
-//* 1. Function to create a new student 
+// * 1. Function to create a new student
 func New(storage storage.Storage) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
@@ -61,7 +61,7 @@ func New(storage storage.Storage) http.HandlerFunc {
 	}
 }
 
-//* 2. Function to get student by id 
+// * 2. Function to get student by id
 func GetStudentById(storage storage.Storage) http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
 
@@ -88,7 +88,7 @@ func GetStudentById(storage storage.Storage) http.HandlerFunc {
 	}
 }
 
-//* 3. Function to list all the students 
+// * 3. Function to list all the students
 func GetStudents(storage storage.Storage) http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
 
@@ -102,5 +102,29 @@ func GetStudents(storage storage.Storage) http.HandlerFunc {
 		}
 
 		response.WriteJson(res, http.StatusOK, students)
+	}
+}
+
+// * 4. Function to delete student
+func DeleteStudent(storage storage.Storage) http.HandlerFunc {
+	return func(res http.ResponseWriter, req *http.Request) {
+		id := req.PathValue("id")
+
+		intId, err := strconv.ParseInt(id, 10, 64)
+
+		if err != nil {
+			response.WriteJson(res, http.StatusBadRequest, response.GeneralError(err))
+			return
+		}
+
+		msg, err := storage.DeleteStudent(intId)
+
+		if err != nil {
+			slog.Error("Error deleting user", slog.String("id", id))
+			response.WriteJson(res, http.StatusInternalServerError, response.GeneralError(err))
+			return
+		}
+
+		response.WriteJson(res, http.StatusOK, msg)
 	}
 }

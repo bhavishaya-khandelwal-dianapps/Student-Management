@@ -130,3 +130,32 @@ func (s *Sqlite) GetStudents() ([]models.Student, error) {
 
 	return students, nil
 }
+
+//* 4. Function to delete student by id 
+func (s *Sqlite) DeleteStudent(id int64) (string, error) {
+	
+	// Step 1: Prepare query 
+	statement, err := s.Db.Prepare("DELETE FROM students WHERE id = ?")
+	if err != nil {
+		return "", err
+	}
+	defer statement.Close()
+
+	// Step 2 Execute the query 
+	res, err := statement.Exec(id)
+	if err != nil {
+		return "", err
+	}
+
+	// Step 3: Check if any row was affected
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return "", err
+	}
+
+	if rowsAffected == 0 {
+		return "", fmt.Errorf("student not found with id %d", id)
+	}
+
+	return fmt.Sprintf("Student with id %d deleted successfully", id), nil
+}
