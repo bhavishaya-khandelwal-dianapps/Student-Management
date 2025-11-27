@@ -128,3 +128,46 @@ func DeleteStudent(storage storage.Storage) http.HandlerFunc {
 		response.WriteJson(res, http.StatusOK, msg)
 	}
 }
+
+// * 5. Function to update student
+func UpdateStudentById(storage storage.Storage) http.HandlerFunc {
+	return func(res http.ResponseWriter, req *http.Request) {
+
+		idStr := req.PathValue("id")
+		intId, err := strconv.ParseInt(idStr, 10, 64)
+		if err != nil {
+			response.WriteJson(res, http.StatusBadRequest, response.GeneralError(err))
+			return
+		}
+
+		var body map[string]interface{}
+		err = json.NewDecoder(req.Body).Decode(&body)
+		
+		if err != nil {
+			response.WriteJson(res, http.StatusBadRequest, response.GeneralError(err))
+			return
+		}
+
+		var namePtr, emailPtr *string
+		var agePtr *int
+
+		if v, ok := body["name"].(string); ok {
+			namePtr = &v
+		}
+		if v, ok := body["email"].(string); ok {
+			emailPtr = &v
+		}
+		if v, ok := body["age"].(float64); ok { // JSON numbers are float64
+			ageVal := int(v)
+			agePtr = &ageVal
+		}
+
+		updatedStudent, err := storage.UpdateStudentById(intId, namePtr, emailPtr, agePtr)
+		if err != nil {
+			response.WriteJson(res, http.StatusInternalServerError, response.GeneralError(err))
+			return
+		}
+
+		response.WriteJson(res, http.StatusOK, updatedStudent)
+	}
+}
