@@ -11,25 +11,33 @@ import (
 	"time"
 
 	"github.com/bhavishaya-khandelwal-dianapps/Student-Management/internal/config"
+	"github.com/bhavishaya-khandelwal-dianapps/Student-Management/internal/database/sqlite"
 	student "github.com/bhavishaya-khandelwal-dianapps/Student-Management/internal/handlers/students"
 )
 
 func main() {
-	// Load config
+	//todo - Step 1. Load config
 	cfg := config.MustLoad()
 
-	// Database setup
+	//todo - Step 2. Database setup
+	storage, err := sqlite.New(cfg)
 
-	// Setup router
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	slog.Info("storage initialized", slog.String("env", cfg.Env), slog.String("version", "1.0.0"))
+
+	//todo - Step 3. Setup router
 	router := http.NewServeMux()
 
 	// router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 	// 	w.Write([]byte("Hello World"))
 	// })
 
-	router.HandleFunc("POST /api/student", student.New())
+	router.HandleFunc("POST /api/student", student.New(storage))
 
-	// Setup server
+	//todo - Step 4. Setup server
 	server := http.Server{
 		Addr:    cfg.Addr,
 		Handler: router,
@@ -57,7 +65,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	err := server.Shutdown(ctx)
+	err = server.Shutdown(ctx)
 
 	if err != nil {
 		slog.Error("Failed to shutdown server", slog.String("error", err.Error()))

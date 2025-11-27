@@ -8,12 +8,13 @@ import (
 	"log/slog"
 	"net/http"
 
+	storage "github.com/bhavishaya-khandelwal-dianapps/Student-Management/internal/database"
 	"github.com/bhavishaya-khandelwal-dianapps/Student-Management/internal/models"
 	"github.com/bhavishaya-khandelwal-dianapps/Student-Management/internal/utils/response"
 	"github.com/go-playground/validator"
 )
 
-func New() http.HandlerFunc {
+func New(storage storage.Storage) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		slog.Info("Creating a student")
@@ -39,6 +40,21 @@ func New() http.HandlerFunc {
 			return
 		}
 
-		response.WriteJson(w, http.StatusCreated, map[string]string{"success": "true"})
+		lastId, err := storage.CreateStudent(
+			student.Name,
+			student.Email,
+			student.Age,
+		)
+
+		slog.Info("user created successfully", slog.String("UserId", fmt.Sprint(lastId)))
+
+		if err != nil {
+			response.WriteJson(w, http.StatusInternalServerError, err)
+			return
+		}
+
+		response.WriteJson(w, http.StatusCreated, map[string]int64{"id": lastId})
+
+		// response.WriteJson(w, http.StatusCreated, map[string]string{"success": "true"})
 	}
 }

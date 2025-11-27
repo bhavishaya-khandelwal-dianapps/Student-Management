@@ -32,7 +32,7 @@ go.work.sum
 # .vscode/
 
 # storage folder
-storage
+/storage
 
 # config folder 
-configs
+/configs
