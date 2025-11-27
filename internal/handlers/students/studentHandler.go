@@ -15,6 +15,7 @@ import (
 	"github.com/go-playground/validator"
 )
 
+//* 1. Function to create a new student 
 func New(storage storage.Storage) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
@@ -60,6 +61,7 @@ func New(storage storage.Storage) http.HandlerFunc {
 	}
 }
 
+//* 2. Function to get student by id 
 func GetStudentById(storage storage.Storage) http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
 
@@ -86,6 +88,7 @@ func GetStudentById(storage storage.Storage) http.HandlerFunc {
 	}
 }
 
+//* 3. Function to list all the students 
 func GetStudents(storage storage.Storage) http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
 

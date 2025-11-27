@@ -39,6 +39,7 @@ func New(cfg *config.Config) (*Sqlite, error) {
 	}, nil
 }
 
+//* 1. Function to create student 
 func (s *Sqlite) CreateStudent(name string, email string, age int) (int64, error) {
 
 	// Step 1: Prepare query
@@ -65,6 +66,7 @@ func (s *Sqlite) CreateStudent(name string, email string, age int) (int64, error
 	return lastId, nil
 }
 
+//* 2. Function to get student by id 
 func (s *Sqlite) GetStudentById(id int64) (models.Student, error) {
 
 	// Step 1 : Prepare query
@@ -92,6 +94,7 @@ func (s *Sqlite) GetStudentById(id int64) (models.Student, error) {
 	return student, nil
 }
 
+//* 3. Function to list all the students 
 func (s *Sqlite) GetStudents() ([]models.Student, error) {
 	// Step 1: Prepare query
 	statement, err := s.Db.Prepare("SELECT id, name, email, age FROM students ")
